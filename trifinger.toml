@@ -1,0 +1,2 @@
+[policy]
+class = "rrc2022.example.MyPolicy"
