@@ -4,6 +4,7 @@ import importlib
 import json
 import logging
 import pathlib
+import sys
 import typing
 
 import gym
@@ -36,23 +37,24 @@ def load_policy_class(policy_class_str: str) -> typing.Type[PolicyBase]:
     return Policy
 
 
-if __name__ == "__main__":
+def main():
     logging.basicConfig(level=logging.INFO)
 
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "task",
+        type=str,
+        choices=["push", "lift"],
+        help="Which task to evaluate ('push' or 'lift').",
+    )
     parser.add_argument(
         "policy_class",
         type=str,
         help="Name of the policy class (something like 'package.module.Class').",
     )
     parser.add_argument(
-        "--env-name",
-        type=str,
-        default="trifinger-cube-push-sim-expert-v0",
-        help="Name of the gym environment to load.",
-    )
-    parser.add_argument(
-        "--no-visualization",
+        "--visualization",
+        "-v",
         action="store_true",
         help="Disable visualization of environment.",
     )
@@ -60,14 +62,7 @@ if __name__ == "__main__":
         "--n-episodes",
         type=int,
         default=64,
-        help="Number of episodes to run.",
-    )
-    parser.add_argument(
-        "--structured-observations",
-        action="store_true",
-        help="""Provide observation as a structured dictionary instead of a flattened
-            array.
-        """,
+        help="Number of episodes to run. Default: %(default)s",
     )
     parser.add_argument(
         "--output",
@@ -77,15 +72,29 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    if args.task == "push":
+        env_name = "trifinger-cube-push-sim-expert-v0"
+    elif args.task == "lift":
+        env_name = "trifinger-cube-lift-sim-expert-v0"
+    else:
+        print("Invalid task %s" % args.task)
+        return 1
+
     Policy = load_policy_class(args.policy_class)
+
+    flatten_observations = Policy.is_using_flattened_observations()
+    if flatten_observations:
+        print("Using flattened observations")
+    else:
+        print("Using structured observations")
 
     env = typing.cast(
         TriFingerDatasetEnv,
         gym.make(
-            args.env_name,
+            env_name,
             disable_env_checker=True,
-            visualization=not args.no_visualization,
-            flatten_obs=not args.structured_observations,
+            visualization=args.visualization,
+            flatten_obs=flatten_observations,
         ),
     )
 
@@ -103,3 +112,9 @@ if __name__ == "__main__":
 
     if args.output:
         args.output.write_text(json_result)
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
