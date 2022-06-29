@@ -26,5 +26,9 @@ models are in `rrc2022/policies` and are installed as package_data so they can b
 at runtime (see `setup.cfg`).
 
 
-TODO: Add link to the challenge documentation
+Documentation
+-------------
 
+For more information, please see the [challenge
+website](https://real-robot-challenge.com) and the [software
+documentation](https://webdav.tuebingen.mpg.de/real-robot-challenge/2022/docs/).
