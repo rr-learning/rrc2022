@@ -4,6 +4,8 @@ import torch
 
 from rrc_2022_datasets import PolicyBase
 
+from . import policies
+
 
 # FIXME: this policy is not following the PolicyBase interface and is returning position
 # commands
@@ -73,8 +75,9 @@ class TorchPushPolicy(TorchBasePolicy):
     """
 
     def __init__(self, action_space, observation_space, episode_length):
+        model = policies.get_model_path("push.pt")
         super().__init__(
-            "./example_models/push.pt", action_space, observation_space, episode_length
+            model, action_space, observation_space, episode_length
         )
 
 
@@ -85,6 +88,7 @@ class TorchLiftPolicy(TorchBasePolicy):
     """
 
     def __init__(self, action_space, observation_space, episode_length):
+        model = policies.get_model_path("lift.pt")
         super().__init__(
-            "./example_models/lift.pt", action_space, observation_space, episode_length
+            model, action_space, observation_space, episode_length
         )
