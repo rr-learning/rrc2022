@@ -1,2 +1,9 @@
-[policy]
-class = "rrc2022.example.MyPolicy"
+[rrc2022]
+task = "push"  # "push" or "lift"
+dataset_type = "expert"  # "expert or "mixed"
+
+# Specify a policy for each task/dataset_type combination.
+push_expert_policy = "rrc2022.example.TorchPushPolicy"
+lift_expert_policy = "rrc2022.example.TorchLiftPolicy"
+push_mixed_policy = "rrc2022.example.TorchPushPolicy"
+lift_mixed_policy = "rrc2022.example.TorchLiftPolicy"
