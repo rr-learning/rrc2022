@@ -22,7 +22,6 @@ class TorchBasePolicy(PolicyBase):
         self.policy = torch.jit.load(
             torch_model_path, map_location=torch.device(self.device)
         )
-        self.action_space = action_space
 
     @staticmethod
     def is_using_flattened_observations():
