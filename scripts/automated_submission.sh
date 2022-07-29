@@ -59,9 +59,9 @@ function curl_check_if_exists()
 }
 
 
-# Send 30 submissions in a loop.  You may want to replace the loop condition
+# Send 10 submissions in a loop.  You may want to replace the loop condition
 # with something more useful.
-for (( i=0; i<30; i++))
+for (( i=0; i<10; i++))
 do
     echo "Submit job"
     submit_result=$(ssh -T ${username}@robots.real-robot-challenge.com <<<submit)
@@ -130,9 +130,8 @@ do
 
     echo "Download data to ${job_dir}"
 
-    # Download data.  Here only the report file is downloaded as example.  Add
-    # equivalent commands for other files as needed.
-    for file in info.json user_stdout.txt user_stderr.txt build_output.txt report.json episodes.json video.mp4
+    # Download data.
+    for file in build_output.txt info.json report.json results.json reward_distribution.pdf reward_over_time.pdf user_stderr.txt user_stdout.txt video.mp4
     do
         curl --user ${username}:${password} -o "${job_dir}/${file}" ${base_url}/${job_id}/${file}
     done
@@ -151,7 +150,7 @@ do
     # NOTE: The robot cluster system needs around 1 minute until the next job
     # can be submitted after the previous one finished (sleeping for a bit more
     # than 1 min to be on the safe side).
-    sleep 70
+    sleep 80
 
     echo
     echo "============================================================"
